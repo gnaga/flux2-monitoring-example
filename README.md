@@ -66,7 +66,14 @@ Wait for Flux to deploy the monitoring stack with:
 ```shell
 flux get kustomizations --watch
 ```
-
+Bootstrap Flux on production and staging cluster:
+```shell
+   # For production
+   flux bootstrap github --path=clusters/production
+   
+   # For staging  
+   flux bootstrap github --path=clusters/staging
+```
 After Flux has finished reconciling, you can list the pods in the monitoring namespace with:
 
 ```console

@@ -32,3 +32,69 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./monitoring/configs
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: postgres-controller
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: monitoring-controllers
+  interval: 1h
+  retryInterval: 2m
+  timeout: 10m
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./postgres/controllers
+  postBuild:
+    substitute:
+      CLUSTER_NAME: monitoring
+      POSTGRES_NAMESPACE: postgres-monitoring
+      POSTGRES_DATABASE: monitoring_db
+      POSTGRES_USER: monitoring_user
+      POSTGRES_PASSWORD: monitoring_password_123
+      POSTGRES_STORAGE_SIZE: 5Gi
+      POSTGRES_CPU_LIMIT: 500m
+      POSTGRES_MEMORY_LIMIT: 512Mi
+      POSTGRES_CPU_REQUEST: 250m
+      POSTGRES_MEMORY_REQUEST: 256Mi
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: production-cluster
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: postgres-controller
+  interval: 1h
+  retryInterval: 2m
+  timeout: 10m
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./clusters/production
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: staging-cluster
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: postgres-controller
+  interval: 1h
+  retryInterval: 2m
+  timeout: 10m
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./clusters/staging

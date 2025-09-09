@@ -1,0 +1,30 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: staging-postgres
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: monitoring-controllers
+  interval: 1h
+  retryInterval: 2m
+  timeout: 10m
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./postgres/controllers
+  postBuild:
+    substitute:
+      CLUSTER_NAME: staging
+      POSTGRES_NAMESPACE: postgres-staging
+      POSTGRES_DATABASE: staging_db
+      POSTGRES_USER: staging_user
+      POSTGRES_PASSWORD: staging_password_123
+      POSTGRES_STORAGE_SIZE: 10Gi
+      POSTGRES_CPU_LIMIT: 500m
+      POSTGRES_MEMORY_LIMIT: 512Mi
+      POSTGRES_CPU_REQUEST: 250m
+      POSTGRES_MEMORY_REQUEST: 256Mi

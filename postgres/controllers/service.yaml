@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: ${POSTGRES_NAMESPACE}
+  labels:
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/instance: ${CLUSTER_NAME}
+    app.kubernetes.io/part-of: postgres
+    app.kubernetes.io/component: database
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+    name: postgres
+  selector:
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/instance: ${CLUSTER_NAME}
