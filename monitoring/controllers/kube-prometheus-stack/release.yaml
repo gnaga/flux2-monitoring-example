@@ -34,6 +34,9 @@ spec:
             cpu: 200m
             memory: 200Mi
         podMonitorNamespaceSelector: { }
+        serviceMonitorNamespaceSelector: { }
+        scrapeInterval: 30s
+        evaluationInterval: 30s
         podMonitorSelector:
           matchLabels:
             app.kubernetes.io/component: monitoring

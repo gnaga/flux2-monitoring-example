@@ -1,10 +1,35 @@
 kube-state-metrics:
-  # For kube-prometheus-stacks that are already installed and configured with
-  # custom collectors, commenting out the collectors and extraArgs below will
-  # retain any existing kube-state-metrics configuration.
-  collectors: [ ]
+  # Enable all standard Kubernetes collectors to get comprehensive metrics
+  collectors:
+    - certificatesigningrequests
+    - configmaps
+    - cronjobs
+    - daemonsets
+    - deployments
+    - endpoints
+    - horizontalpodautoscalers
+    - ingresses
+    - jobs
+    - limitranges
+    - mutatingwebhookconfigurations
+    - namespaces
+    - networkpolicies
+    - nodes
+    - persistentvolumeclaims
+    - persistentvolumes
+    - poddisruptionbudgets
+    - pods
+    - replicasets
+    - replicationcontrollers
+    - resourcequotas
+    - secrets
+    - services
+    - statefulsets
+    - storageclasses
+    - validatingwebhookconfigurations
+    - volumeattachments
   extraArgs:
-    - --custom-resource-state-only=true
+    - --custom-resource-state-only=false
   rbac:
     extraRules:
       - apiGroups:
@@ -27,11 +52,69 @@ kube-state-metrics:
           - imagerepositories
           - imagepolicies
           - imageupdateautomations
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - ""
+        resources:
           - nodes
           - nodes/proxy
           - services
           - endpoints
           - pods
+          - configmaps
+          - secrets
+          - persistentvolumes
+          - persistentvolumeclaims
+          - namespaces
+          - limitranges
+          - resourcequotas
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - apps
+        resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - batch
+        resources:
+          - jobs
+          - cronjobs
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - autoscaling
+        resources:
+          - horizontalpodautoscalers
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - policy
+        resources:
+          - poddisruptionbudgets
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - networking.k8s.io
+        resources:
+          - ingresses
+          - networkpolicies
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - storage.k8s.io
+        resources:
+          - storageclasses
+          - volumeattachments
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - certificates.k8s.io
+        resources:
+          - certificatesigningrequests
+        verbs: [ "get","list", "watch" ]
+      - apiGroups:
+          - admissionregistration.k8s.io
+        resources:
+          - mutatingwebhookconfigurations
+          - validatingwebhookconfigurations
         verbs: [ "get","list", "watch" ]
   customResourceState:
     enabled: true
