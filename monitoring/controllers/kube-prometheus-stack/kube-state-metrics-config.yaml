@@ -27,7 +27,12 @@ kube-state-metrics:
           - imagerepositories
           - imagepolicies
           - imageupdateautomations
-        verbs: [ "list", "watch" ]
+          - nodes
+          - nodes/proxy
+          - services
+          - endpoints
+          - pods
+        verbs: [ "get","list", "watch" ]
   customResourceState:
     enabled: true
     config:
