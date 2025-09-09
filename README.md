@@ -58,7 +58,7 @@ flux bootstrap github \
     --repository=flux2-monitoring-example \
     --branch=main \
     --personal \
-    --path=clusters/test
+    --path=clusters/monitoring
 ```
 
 Wait for Flux to deploy the monitoring stack with:
